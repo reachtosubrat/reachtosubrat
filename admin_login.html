@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — reachtosubrat</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:#060610;color:#e8e8f5;
+  font-family:'JetBrains Mono',monospace;
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,255,148,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,255,148,.02) 1px,transparent 1px);
+  background-size:48px 48px;
+  animation:g 20s linear infinite;
+}
+@keyframes g{to{transform:translateY(48px);}}
+
+.box{
+  position:relative;z-index:1;
+  width:100%;max-width:400px;
+  padding:48px 40px;
+  background:rgba(11,11,24,.95);
+  border:1px solid #1a1a2e;
+  border-radius:4px;
+  backdrop-filter:blur(12px);
+  animation:fadeUp .5s ease forwards;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+.logo{
+  font-family:'Syne',sans-serif;
+  font-size:1.6rem;font-weight:800;
+  color:#fff;text-align:center;margin-bottom:6px;
+}
+.logo span{color:#00ff94;}
+.sub{font-size:9px;letter-spacing:.3em;color:#52527a;text-align:center;text-transform:uppercase;margin-bottom:36px;}
+
+label{font-size:9px;letter-spacing:.2em;color:#52527a;text-transform:uppercase;display:block;margin-bottom:8px;}
+input{
+  width:100%;background:rgba(255,255,255,.04);
+  border:1px solid #1a1a2e;border-radius:2px;
+  padding:12px 14px;font-family:'JetBrains Mono',monospace;
+  font-size:.9rem;color:#e8e8f5;outline:none;
+  transition:border-color .2s;margin-bottom:20px;
+}
+input:focus{border-color:rgba(0,255,148,.4);}
+input::placeholder{color:#52527a;}
+
+button{
+  width:100%;background:#00ff94;color:#060610;
+  border:none;padding:13px;font-family:'JetBrains Mono',monospace;
+  font-size:.85rem;font-weight:500;letter-spacing:.1em;
+  cursor:pointer;border-radius:2px;
+  transition:background .2s,transform .1s;
+  text-transform:uppercase;
+}
+button:hover{background:#00e085;}
+button:active{transform:scale(.98);}
+
+.error{
+  background:rgba(255,45,107,.1);border:1px solid rgba(255,45,107,.3);
+  color:#ff2d6b;font-size:.8rem;padding:10px 14px;
+  border-radius:2px;margin-bottom:20px;
+  animation:fadeUp .3s ease;
+}
+.back{
+  display:block;text-align:center;margin-top:20px;
+  font-size:9px;letter-spacing:.15em;color:#52527a;
+  text-decoration:none;transition:color .2s;
+}
+.back:hover{color:#00ff94;}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="logo">reach<span>to</span>subrat</div>
+  <div class="sub">Admin Access</div>
+  {% if error %}
+  <div class="error">⚠ {{ error }}</div>
+  {% endif %}
+  <form method="POST" action="/admin/auth" autocomplete="off">
+    <label>Username</label>
+    <input type="text" name="username" placeholder="admin username" required autofocus>
+    <label>Password</label>
+    <input type="password" name="password" placeholder="••••••••••" required>
+    <button type="submit">→ Enter</button>
+  </form>
+  <a href="/" class="back">← Back to site</a>
+</div>
+</body>
+</html>

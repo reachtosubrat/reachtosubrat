@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — reachtosubrat Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Syne:wght@700;800&family=Baloo+2:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#060610;--card:#0f0f1c;--border:#1a1a2e;
+  --neon:#00ff94;--pink:#ff2d6b;--gold:#ffd84a;
+  --text:#e8e8f5;--muted:#52527a;
+}
+body{background:var(--bg);color:var(--text);font-family:'Baloo 2',sans-serif;min-height:100vh;}
+
+/* Topbar */
+.topbar{
+  background:var(--card);border-bottom:1px solid var(--border);
+  padding:14px 28px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:50;
+}
+.topbar-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;}
+.topbar-brand span{color:var(--neon);}
+.topbar-right{display:flex;gap:12px;align-items:center;}
+.btn-view{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:.2em;text-transform:uppercase;
+  border:1px solid var(--border);background:transparent;
+  color:var(--text);padding:7px 14px;cursor:pointer;
+  text-decoration:none;transition:all .2s;border-radius:2px;
+}
+.btn-view:hover{border-color:var(--neon);color:var(--neon);}
+.btn-logout{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:.2em;text-transform:uppercase;
+  border:1px solid rgba(255,45,107,.3);background:rgba(255,45,107,.08);
+  color:var(--pink);padding:7px 14px;cursor:pointer;
+  text-decoration:none;transition:all .2s;border-radius:2px;
+}
+.btn-logout:hover{background:rgba(255,45,107,.15);}
+
+/* Layout */
+.page{max-width:900px;margin:0 auto;padding:40px 24px 80px;}
+
+.section-title{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:.3em;color:var(--muted);text-transform:uppercase;
+  margin-bottom:16px;margin-top:40px;
+}
+
+/* Card */
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:4px;padding:24px;margin-bottom:16px;
+}
+
+label{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:.2em;color:var(--muted);text-transform:uppercase;
+  display:block;margin-bottom:8px;margin-top:16px;
+}
+label:first-child{margin-top:0;}
+
+input[type=text],input[type=email],input[type=url],textarea{
+  width:100%;background:rgba(255,255,255,.03);
+  border:1px solid var(--border);border-radius:2px;
+  padding:11px 14px;font-family:'JetBrains Mono',monospace;
+  font-size:.85rem;color:var(--text);outline:none;
+  transition:border-color .2s;resize:vertical;
+}
+input:focus,textarea:focus{border-color:rgba(0,255,148,.35);}
+input::placeholder,textarea::placeholder{color:var(--muted);}
+textarea{min-height:80px;}
+
+.save-btn{
+  margin-top:20px;
+  background:var(--neon);color:#060610;
+  border:none;padding:11px 24px;
+  font-family:'JetBrains Mono',monospace;font-size:.8rem;
+  font-weight:500;letter-spacing:.15em;text-transform:uppercase;
+  cursor:pointer;border-radius:2px;transition:all .2s;
+}
+.save-btn:hover{background:#00e085;}
+.save-btn:active{transform:scale(.97);}
+
+/* Social link rows */
+.link-row{
+  background:rgba(255,255,255,.02);
+  border:1px solid var(--border);border-radius:4px;
+  padding:16px 18px;margin-bottom:10px;
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+}
+.link-row-head{
+  display:flex;align-items:center;gap:10px;
+  grid-column:1/-1;margin-bottom:4px;
+}
+.link-platform-name{
+  font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;
+}
+.toggle{
+  margin-left:auto;
+  display:flex;align-items:center;gap:8px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  color:var(--muted);letter-spacing:.1em;cursor:pointer;
+}
+.toggle input[type=checkbox]{
+  width:auto;padding:0;border:none;
+  accent-color:var(--neon);cursor:pointer;
+  width:15px;height:15px;
+}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:32px;right:32px;
+  background:rgba(0,255,148,.1);border:1px solid rgba(0,255,148,.3);
+  color:var(--neon);font-family:'JetBrains Mono',monospace;
+  font-size:.8rem;padding:12px 20px;border-radius:4px;
+  transform:translateY(20px);opacity:0;
+  transition:all .3s;z-index:100;letter-spacing:.05em;
+}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.err{background:rgba(255,45,107,.1);border-color:rgba(255,45,107,.3);color:var(--pink);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">reach<span>to</span>subrat <span style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:400;">/ admin</span></div>
+  <div class="topbar-right">
+    <a href="/" target="_blank" class="btn-view">View Site ↗</a>
+    <a href="/admin/logout" class="btn-logout">Logout</a>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- HERO SECTION -->
+  <div class="section-title">01 — Hero / Profile</div>
+  <div class="card">
+    <label>Display Name</label>
+    <input type="text" id="h-name" value="{{ data.hero.name }}" maxlength="80" placeholder="Your name">
+    <label>Tagline</label>
+    <input type="text" id="h-tagline" value="{{ data.hero.tagline }}" maxlength="120" placeholder="Short tagline">
+    <label>Bio</label>
+    <textarea id="h-bio" maxlength="400" placeholder="Short bio about you...">{{ data.hero.bio }}</textarea>
+    <button class="save-btn" onclick="saveHero()">Save Profile →</button>
+  </div>
+
+  <!-- SOCIAL LINKS -->
+  <div class="section-title">02 — Social Links</div>
+  <div class="card">
+    <div id="links-container">
+      {% for link in data.social_links %}
+      <div class="link-row" data-idx="{{ loop.index0 }}">
+        <div class="link-row-head">
+          <span class="link-platform-name">{{ link.platform }}</span>
+          <label class="toggle" style="margin-top:0;">
+            <input type="checkbox" class="link-active" {% if link.active %}checked{% endif %}>
+            Active
+          </label>
+        </div>
+        <div>
+          <label style="margin-top:0;">URL</label>
+          <input type="url" class="link-url" value="{{ link.url }}" placeholder="https://...">
+        </div>
+        <div>
+          <label style="margin-top:0;">Handle</label>
+          <input type="text" class="link-handle" value="{{ link.handle }}" placeholder="@handle">
+        </div>
+        <!-- Hidden fields -->
+        <input type="hidden" class="link-platform" value="{{ link.platform }}">
+        <input type="hidden" class="link-icon" value="{{ link.icon }}">
+      </div>
+      {% endfor %}
+    </div>
+    <button class="save-btn" onclick="saveLinks()">Save Links →</button>
+  </div>
+
+  <!-- EMAIL -->
+  <div class="section-title">03 — Contact Email</div>
+  <div class="card">
+    <label>Email Address</label>
+    <input type="email" id="e-email" value="{{ data.email }}" placeholder="your@email.com">
+    <label style="margin-top:16px;display:flex;align-items:center;gap:10px;cursor:pointer;">
+      <input type="checkbox" id="e-show" {% if data.show_email %}checked{% endif %} style="width:auto;padding:0;accent-color:var(--neon);width:15px;height:15px;">
+      Show email on site
+    </label>
+    <button class="save-btn" onclick="saveEmail()">Save Email →</button>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function showToast(msg, err=false){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (err?' err':'');
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+async function post(section, body){
+  const r = await fetch('/admin/update',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({section,...body})
+  });
+  const d = await r.json();
+  if(d.ok) showToast('✓ Saved successfully');
+  else showToast('✗ Error: '+d.msg, true);
+}
+
+function saveHero(){
+  post('hero',{
+    name: document.getElementById('h-name').value,
+    tagline: document.getElementById('h-tagline').value,
+    bio: document.getElementById('h-bio').value
+  });
+}
+
+function saveLinks(){
+  const rows = document.querySelectorAll('.link-row');
+  const links = Array.from(rows).map(row=>({
+    platform: row.querySelector('.link-platform').value,
+    icon:     row.querySelector('.link-icon').value,
+    url:      row.querySelector('.link-url').value,
+    handle:   row.querySelector('.link-handle').value,
+    active:   row.querySelector('.link-active').checked
+  }));
+  post('social',{links});
+}
+
+function saveEmail(){
+  post('email',{
+    email: document.getElementById('e-email').value,
+    show_email: document.getElementById('e-show').checked
+  });
+}
+</script>
+</body>
+</html>
